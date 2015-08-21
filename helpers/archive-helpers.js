@@ -40,7 +40,7 @@ exports.readListOfUrls = function(callback){
       callback(urls.split('\n'));
        }
 
-return urls;
+//return urls;
 
 });
 
@@ -48,13 +48,30 @@ return urls;
 };
 
 exports.isUrlInList = function(url, callback){
-  var string = '';
+  //reads archives/sites.txt and checks for the url
+  // exports.readListOfUrls(function(array){
+  //   if(callback(array.indexOf(url) > -1)){
+  //     return true;
+  //   }
+  //   if(callback){
+  //     callback(url);
+  //   }
+  //   else{
+  //     return false;
+  //   }
+  // });
+var string='';
   fs.readFile(exports.paths.list, function (err, data) {
     if (err) {
       throw err;
     }
     if(callback){
       string += data;
+      console.log('stringBeforeSplit: '+string)
+     // string=string.split('\n');
+     // console.log('stringAfterSplit:'+string)
+     console.log('url:'+url)
+      console.log('stringTest:'+string.indexOf(url))
       callback(string.indexOf(url) > -1)
 
      }
@@ -63,13 +80,20 @@ exports.isUrlInList = function(url, callback){
 };
 
 exports.addUrlToList = function(url, callback){
-
-  fs.appendFile(exports.paths.list, url + '\n', function(err, data){
-    if(err){
-      throw err;
+//should write the url to the sites.txt file
+  exports.isUrlInList(url,function(found){
+    if(!found){
+      fs. vbappendFile(exports.paths.list, url + '\n', function(err){
+        if(err){
+          throw err;
+        }
+      }
+    )}
+    if(callback){
+      //console.log('url:'+ url)
+      //console.log('callback:'+ callback)
+      callback(url);
     }
-
-      callback()
 
   })
 
@@ -78,10 +102,11 @@ exports.addUrlToList = function(url, callback){
 
 exports.isUrlArchived = function(url, callback){
 
-  var justinsway = path.join(exports.paths.archivedSites, url);
-  fs.exists(justinsway, function (exists) {
-
+  var createUrlPath = path.join(exports.paths.archivedSites, url);
+  fs.exists(createUrlPath, function (exists) {
+    if(callback){
     callback(exists);
+    }
   })
 };
 
@@ -91,8 +116,9 @@ var html = '<html>reagan finally</html>'
 
   urlArray.forEach(function(url){
    // console.log('isUrlArchived:'+exports.isUrlArchived(url))
-   // if(!exports.isUrlArchived(url)){
+    if(!exports.isUrlArchived(url)){
+      // exports.addUrlToList(url)
       fs.writeFile(exports.paths.archivedSites + url, html);
-   // }
+    }
   });
-};
+} ;

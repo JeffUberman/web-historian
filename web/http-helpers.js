@@ -16,6 +16,9 @@ exports.serveAssets = function(res, asset, callback) {
   // css, or anything that doesn't change often.)
 };
 
+exports.collectData = function (){
+
+}
 
 
 // As you progress, keep thinking about what helper functions you can put here!
